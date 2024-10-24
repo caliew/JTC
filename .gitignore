@@ -1,0 +1,6 @@
+# Exclude node_modules directories
+my-app/node_modules
+my-app/package-lock.json
+server/node_modules
+gateway/node_modules
+gateway/dist
