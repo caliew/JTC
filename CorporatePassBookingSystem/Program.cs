@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using CorporatePassBookingSystem.Data;
 using Microsoft.EntityFrameworkCore;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
+using CorporatePassBookingSystem.DataAccess;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +28,13 @@ builder.Services.AddSwaggerGen(c =>
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<CorporatePassBookingSystemContext>(options =>
     options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+
+builder.Services.AddTransient<JsonDataAccess>(provider =>
+{
+    var configuration = provider.GetService<IConfiguration>();
+    var jsonFilePath = configuration["JsonFilePath"] ?? Path.Combine(Directory.GetCurrentDirectory(), "data.json");
+    return new JsonDataAccess(jsonFilePath);
+});
 
 // Add custom services to the container
 builder.Services.AddTransient<IFacilityRepository, FacilityRepository>();
@@ -62,7 +70,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
 
 app.MapControllers();

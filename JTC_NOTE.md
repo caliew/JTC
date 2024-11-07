@@ -17,6 +17,7 @@ SETUP REQUIREMENTS:
     SETUP OF DATABASE AND TABLES
 - In Terminal run : dotnet ef migrations InitializeDB
 - In Terminal run : dotnet ef database update
+
     SETUP OF REST API (WEBAPI)
 - In Terminal run : dotnet build                            -> To builld the solution in \bin
 - In Terminal run : dotnet run                              -> This will fired up the REST API Server

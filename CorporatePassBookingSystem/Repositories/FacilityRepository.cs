@@ -1,48 +1,47 @@
 // FacilityRepository.cs
 using CorporatePassBookingSystem.Data;
 using CorporatePassBookingSystem.Models;
+using CorporatePassBookingSystem.DataAccess;
 
 namespace CorporatePassBookingSystem.Repositories
 {
     public class FacilityRepository : IFacilityRepository
     {
-        private readonly CorporatePassBookingSystemContext _context;
+        private readonly JsonDataAccess _dataAccess;
 
-        public FacilityRepository(CorporatePassBookingSystemContext context)
+        public FacilityRepository(JsonDataAccess dataAccess)
         {
-            _context = context;
+            _dataAccess = dataAccess;
+        }
+
+        public IEnumerable<Facility> GetAll()
+        {
+            return _dataAccess.GetFacilities();
+        }
+        
+        public Facility? GetFacility(int id)
+        {
+            return _dataAccess.GetFacility(id);
         }
 
         public IEnumerable<Facility> GetFacilities()
         {
-            return _context.Facilities.ToList();
-        }
-
-        public Facility? GetFacility(int id)
-        {
-            return _context.Facilities.Find(id);
+            return _dataAccess.GetFacilities();
         }
 
         public void CreateFacility(Facility facility)
         {
-            _context.Facilities.Add(facility);
-            _context.SaveChanges();
+            _dataAccess.CreateFacility(facility);
         }
 
         public void UpdateFacility(Facility facility)
         {
-            _context.Facilities.Update(facility);
-            _context.SaveChanges();
+            _dataAccess.UpdateFacility(facility);
         }
 
         public void DeleteFacility(int id)
         {
-            var facility = _context.Facilities.Find(id);
-            if (facility != null)
-            {
-                _context.Facilities.Remove(facility);
-                _context.SaveChanges();
-            }
+            _dataAccess.DeleteFacility(id);
         }
     }
 }

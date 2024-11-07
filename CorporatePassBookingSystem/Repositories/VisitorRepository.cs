@@ -1,49 +1,42 @@
-using CorporatePassBookingSystem.Data;
+using CorporatePassBookingSystem.DataAccess;
 using CorporatePassBookingSystem.Models;
-using System.Collections.Generic;
-using System.Linq;
+using CorporatePassBookingSystem.Repositories;
 
 namespace CorporatePassBookingSystem.Repositories
 {
     public class VisitorRepository : IVisitorRepository
     {
-        private readonly CorporatePassBookingSystemContext _context;
+        private readonly JsonDataAccess _dataAccess;
 
-        public VisitorRepository(CorporatePassBookingSystemContext context)
+        public VisitorRepository(JsonDataAccess dataAccess)
         {
-            _context = context;
-        }
-
-        public IEnumerable<Visitor> GetVisitors()
-        {
-            return _context.Visitors.ToList();
+            _dataAccess = dataAccess;
         }
 
         public Visitor? GetVisitor(int id)
         {
-            return _context.Visitors.Find(id);
+            var visitors = _dataAccess.GetVisitors();
+            return visitors?.FirstOrDefault(v => v.Id == id);
+        }
+
+        public IEnumerable<Visitor> GetVisitors()
+        {
+            return _dataAccess.GetVisitors();
         }
 
         public void CreateVisitor(Visitor visitor)
         {
-            _context.Visitors.Add(visitor);
-            _context.SaveChanges();
+            _dataAccess.CreateVisitor(visitor);
         }
 
         public void UpdateVisitor(Visitor visitor)
         {
-            _context.Visitors.Update(visitor);
-            _context.SaveChanges();
+            _dataAccess.UpdateVisitor(visitor);
         }
 
         public void DeleteVisitor(int id)
         {
-            var visitor = _context.Visitors.Find(id);
-            if (visitor != null)
-            {
-                _context.Visitors.Remove(visitor);
-                _context.SaveChanges();
-            }
+            _dataAccess.DeleteVisitor(id);
         }
     }
 }

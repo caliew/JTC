@@ -1,54 +1,47 @@
-using CorporatePassBookingSystem.Data;
+using CorporatePassBookingSystem.DataAccess;
 using CorporatePassBookingSystem.Models;
-using System.Collections.Generic;
-using System.Linq;
+using CorporatePassBookingSystem.Repositories;
 
-namespace CorporatePassBookingSystem.Repositories
+public class BookingRepository : IBookingRepository
 {
-    public class BookingRepository : IBookingRepository
+    private readonly JsonDataAccess _dataAccess;
+
+    public BookingRepository(JsonDataAccess dataAccess)
     {
-        private readonly CorporatePassBookingSystemContext _context;
-
-        public BookingRepository(CorporatePassBookingSystemContext context)
-        {
-            _context = context;
-        }
-
-        public IEnumerable<Booking> GetBookings()
-        {
-            return _context.Bookings.ToList();
-        }
-
-        public Booking? GetBooking(int id)
-        {
-            return _context.Bookings.Find(id);
-        }
-
-        public void CreateBooking(Booking booking)
-        {
-            _context.Bookings.Add(booking);
-            _context.SaveChanges();
-        }
-
-        public void UpdateBooking(Booking booking)
-        {
-            _context.Bookings.Update(booking);
-            _context.SaveChanges();
-        }
-
-        public void DeleteBooking(int id)
-        {
-            var booking = _context.Bookings.Find(id);
-            if (booking != null)
-            {
-                _context.Bookings.Remove(booking);
-                _context.SaveChanges();
-            }
-        }
-
-        public Booking? GetBookingByFacilityIdAndDate(int facilityId, DateTime bookingDate)
-        {
-            return _context.Bookings.FirstOrDefault(b => b.FacilityId == facilityId && b.BookingDate == bookingDate);
-        }        
+        _dataAccess = dataAccess;
     }
+
+    public IEnumerable<Booking?> GetBookings()
+    {
+        return _dataAccess.GetBookings();
+    }
+
+    public Booking? GetBooking(int id)
+    {
+        var bookings = _dataAccess.GetBookings();
+        return bookings?.FirstOrDefault(b => b.Id == id);
+    }
+
+    public void CreateBooking(Booking booking)
+    {
+        _dataAccess.CreateBooking(booking);
+    }
+
+    public void UpdateBooking(Booking booking)
+    {
+        _dataAccess.UpdateBooking(booking);
+    }
+
+    public void DeleteBooking(int id)
+    {
+        _dataAccess.DeleteBooking(id);
+    }
+
+    public Booking GetBookingByFacilityIdAndDate(int facilityId, DateTime date)
+    {
+        // Implement the logic to retrieve a booking by facility ID and date
+        // ...
+        return null; // Add a default return value
+    }
+
 }
